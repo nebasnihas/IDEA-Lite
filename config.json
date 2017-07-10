@@ -1,0 +1,6 @@
+{
+    "name": "Soccer-Report",
+    "tasks": "../backend/tasks",
+    "data": "../backend/data",
+    "port": 9999
+}
