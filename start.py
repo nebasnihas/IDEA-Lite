@@ -13,6 +13,7 @@ from flask_compress import Compress
 from flask_cache import Cache
 
 from aux import sha1str
+from auth import auth
 from config import appName, bindPort, tasksDir, redisCachePrefix, redisCacheTimeout
 
 app = Flask(appName)
@@ -42,6 +43,7 @@ tasks = {
 }
 
 @app.route('/<task>/<command>')
+@auth
 @cache.cached(key_prefix=makeCacheKey)
 def runTask(task, command):
     if task not in tasks:
@@ -53,7 +55,9 @@ def runTask(task, command):
         return jsonify(message="Command does not exist."), status.HTTP_404_NOT_FOUND
 
     return jsonify(data=func(**{
-        k: (v[0] if len(v) == 1 else v) for k, v in request.args.iterlists()
+        k: (v[0] if len(v) == 1 else v)
+        for k, v in request.args.iterlists()
+        if k != "token"
     }))
 
 if __name__ == '__main__':
