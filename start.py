@@ -14,7 +14,7 @@ from flask_cache import Cache
 
 from aux import sha1str
 from auth import auth
-from config import appName, bindPort, tasksDir, redisCachePrefix, redisCacheTimeout
+from config import appName, bindPort, tasksDir, redisCachePrefix, redisCacheTimeout, authCodes
 
 app = Flask(appName)
 # cache = Cache(app, config={
@@ -41,6 +41,11 @@ tasks = {
     d: getTask(d) for d in os.listdir(tasksDir)
     if os.path.isdir(os.path.join(tasksDir, d))
 }
+
+@app.route('/auth/verify')
+def auth_verify():
+    token = request.args.get('token', "", type=str)
+    return jsonify(auth=(token in authCodes))
 
 @app.route('/<task>/<command>')
 @auth
