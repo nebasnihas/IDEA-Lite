@@ -14,7 +14,7 @@ def auth(func):
     @wraps(func)
     def call(*args, **kwargs):
         token = request.args.get('token', "", type=str).lower()
-        if token not in authCodes:
+        if len(authCodes) > 0 and token not in authCodes:
             return jsonify(auth=False, message="Invalid token."), status.HTTP_401_UNAUTHORIZED
 
         return func(*args, **kwargs)
