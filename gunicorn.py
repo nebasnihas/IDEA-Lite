@@ -10,6 +10,6 @@ with open("config.json") as f:
 
 bind = "0.0.0.0:{}".format(bindPort)
 workers = 4
-loglevel = "debug"
+worker_class = "tornado"
 timeout = 60 * 10
 limit_request_line = 0

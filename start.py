@@ -10,21 +10,21 @@ from flask import Flask, jsonify, request
 from flask_api import status
 from flask_cors import CORS
 from flask_compress import Compress
-from flask_cache import Cache
+from flask_caching import Cache
 
 from aux import sha1str
 from auth import auth
 from config import appName, bindPort, tasksDir, redisCachePrefix, redisCacheTimeout, authCodes
 
 app = Flask(appName)
-# cache = Cache(app, config={
-    # 'CACHE_TYPE': 'redis',
-    # 'CACHE_KEY_PREFIX': redisCachePrefix + "view:",
-    # 'CACHE_DEFAULT_TIMEOUT': redisCacheTimeout
-# })
 cache = Cache(app, config={
-    'CACHE_TYPE': 'null'
+    'CACHE_TYPE': 'redis',
+    'CACHE_KEY_PREFIX': redisCachePrefix + "view:",
+    'CACHE_DEFAULT_TIMEOUT': redisCacheTimeout
 })
+# cache = Cache(app, config={
+    # 'CACHE_TYPE': 'null'
+# })
 CORS(app)
 Compress(app)
 
@@ -45,7 +45,7 @@ tasks = {
 @app.route('/auth/verify')
 def auth_verify():
     token = request.args.get('token', "", type=str)
-    return jsonify(auth=(token in authCodes))
+    return jsonify(auth=(len(authCodes) == 0 or token in authCodes))
 
 @app.route('/<task>/<command>')
 @auth
