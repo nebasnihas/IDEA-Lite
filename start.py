@@ -17,14 +17,14 @@ from auth import auth
 from config import appName, bindPort, tasksDir, redisCachePrefix, redisCacheTimeout, authCodes
 
 app = Flask(appName)
+#cache = Cache(app, config={
+#    'CACHE_TYPE': 'redis',
+#    'CACHE_KEY_PREFIX': redisCachePrefix + "view:",
+#    'CACHE_DEFAULT_TIMEOUT': redisCacheTimeout
+#})
 cache = Cache(app, config={
-    'CACHE_TYPE': 'redis',
-    'CACHE_KEY_PREFIX': redisCachePrefix + "view:",
-    'CACHE_DEFAULT_TIMEOUT': redisCacheTimeout
+     'CACHE_TYPE': 'null'
 })
-# cache = Cache(app, config={
-    # 'CACHE_TYPE': 'null'
-# })
 CORS(app)
 Compress(app)
 
@@ -47,7 +47,7 @@ def auth_verify():
     token = request.args.get('token', "", type=str)
     return jsonify(auth=(len(authCodes) == 0 or token in authCodes))
 
-@app.route('/<task>/<command>')
+@app.route('/<task>/<command>', methods=['GET','POST'])
 @auth
 @cache.cached(key_prefix=makeCacheKey)
 def runTask(task, command):

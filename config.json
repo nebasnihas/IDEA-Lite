@@ -3,5 +3,6 @@
     "tasks": "../backend/tasks",
     "data": "../backend/data",
     "port": 9999,
-    "auth": []
+    "auth": [],
+    "imports": "../backend/data/imports"
 }

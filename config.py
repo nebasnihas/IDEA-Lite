@@ -19,6 +19,7 @@ with open("config.json") as f:
 
     tasksDir = j["tasks"]
     dataDir = j["data"]
+    importsDir = j["imports"]
 
     authCodes = set(sha256str(code) for code in j["auth"])
 
